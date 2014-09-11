@@ -2,7 +2,10 @@
  * Created by gadielortez on 8/20/14.
  */
 
-angular.module('scrumApp').controller('ScrumCardsCtrl', function ($scope, cardHub) {
+angular.module('scrumApp').controller('ScrumCardsCtrl',function ($scope, cardHub) {
+
+    $scope.isTrelloAdmin = true;
+
     $scope.cards = [{
         'name':'Mountain Goat',
         'values':[{
@@ -156,6 +159,7 @@ angular.module('scrumApp').controller('ScrumCardsCtrl', function ($scope, cardHu
 
     cardHub.client.identifyMe = function(isAdmin) {
         $scope.imAdmin = isAdmin;
+        $scope.isTrelloAdmin = isAdmin;
     };
 
     cardHub.client.getCardFilter = function(query) {

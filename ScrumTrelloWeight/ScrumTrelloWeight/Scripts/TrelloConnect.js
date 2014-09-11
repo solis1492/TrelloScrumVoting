@@ -21,7 +21,8 @@
                     .click(function() {
                         $cards.empty();
                         Trello.get("boards/" + card.id + "/lists/", function(cards) {
-                            $("<div>").text("Cards").appendTo($cards);
+                            $("<div>").text("Lists").appendTo($cards);
+
                             $.each(cards, function(ix, card) {
                                 $("<div>")
                                     .addClass("card")
@@ -31,8 +32,15 @@
                                         $cards.empty();
                                         Trello.get("lists/" + card.id + "/cards/", function(cards) {
                                             $("<div>").text("Cards").appendTo($cards);
+
                                             $.each(cards, function(ix, card) {
-                                                $("<div>").addClass("card").text(card.name).appendTo($cards);
+                                                $("<div>").addClass("card").text(card.name).appendTo($cards)
+                                                .click(function () {
+                                                    alert("a");
+                                                    angular.element($('#CardController')).scope().roomName = card.id;
+                                                    angular.element($('#CardController')).scope().joinRoom();
+                                                   
+                                                });
                                             });
                                         });
                                     });

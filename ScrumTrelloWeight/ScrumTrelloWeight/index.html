@@ -7,18 +7,36 @@
     <script src="Scripts/jquery.signalR-2.1.1.min.js"></script>
     <script src="signalr/hubs"></script>
     <script src="Scripts/angular.js"></script>
+    
     <script src="Scripts/app.js"></script>
-    <script src="Scripts/TrelloConnect.js"></script>
+    
     <script src="https://api.trello.com/1/client.js?key=0bfd84a20f3dd1f72a79f0b68ade91d4&dummy=.js"></script>
+    
     <script src="Scripts/controllers.js"></script>
+    <script src="Scripts/TrelloConnect.js"></script>
 </head>
-<body ng-controller="ScrumCardsCtrl">
-    <div ng-hide="inRoom">
-        <input ng-hide="inRoom" ng-model="roomName" type="text"  placeholder="room" autofocus />
-        <button ng-hide="inRoom" ng-click="joinRoom()" >Join Room</button>
+<body id="CardController" ng-controller="ScrumCardsCtrl">
 
+    <div ng-show="isTrelloAdmin">
+        <div id="loggedout">
+            <a href="#" onclick="Trello.authorize({type: 'popup', expiration: 'never', success: onAuthorize, scope: { write: true, read: true }})">Connect To Trello</a>
+        </div>
+        <div id="loggedin">
+            <div id="header">
+                Logged in to as <span id="fullName"></span>
+                <a href="#" onclick="Trello.deauthorize(); updateLoggedIn();">Log Out</a>
+            </div>
+            <div id="output"></div>
+        </div>
+    </div>
+
+    <div ng-hide="inRoom">
+        <input ng-hide="inRoom" ng-model="roomName" type="text" placeholder="room" autofocus />
+        <button ng-hide="inRoom" ng-click="joinRoom()">Join Room</button>
     </div>
     <div ng-show="inRoom">
+        <p> Room ID = {{roomName}}</p>
+
         <div ng-if="imAdmin">
             Select your card pack
             <select ng-model="query">
@@ -26,26 +44,24 @@
             </select>
         </div>
         Choose your estimate :
-        
-            <div ng-repeat="card in cards | filter:query">
-                <button type="button" ng-repeat="value in card.values" ng-click="setWeight(value.weight)">
-                    {{value.weight}}
-                </button>
-            </div>
+
+        <div ng-repeat="card in cards | filter:query">
+            <button type="button" ng-repeat="value in card.values" ng-click="setWeight(value.weight)">
+                {{value.weight}}
+            </button>
+        </div>
         <div>
             Others:
             <button type="button" ng-repeat="okis in weightsVoted track by $index">
                 {{okis}}
             </button>
-            
-            <button type="button" ng-repeat="holder in placeHolders() track by $index">
-            </button>
+
+            <button type="button" ng-repeat="holder in placeHolders() track by $index"></button>
         </div>
         <div ng-if="imAdmin">
             <button ng-click="reset()">Reset</button>
             <button ng-click="show()">Show</button>
         </div>
-
     </div>
 </body>
 </html>

@@ -11,4 +11,5 @@
     });
 
     angular.module('scrumApp').value('cardHub', $.connection.cardHub);
+    
 })();

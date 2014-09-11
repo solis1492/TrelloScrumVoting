@@ -3,20 +3,10 @@
 <head>
     <title></title>
     <script src="Scripts/jquery-1.9.1.min.js"></script>
-    <script src="Scripts/TrelloConnect.js"></script>
     <script src="https://api.trello.com/1/client.js?key=0bfd84a20f3dd1f72a79f0b68ade91d4&dummy=.js"></script>
+    <script src="Scripts/TrelloConnect.js"></script>
 </head>
 <body>
-    <div id="loggedout">
-        <a href="#" onclick="Trello.authorize({type: 'popup', expiration: 'never', success: onAuthorize, scope: { write: true, read: true }})">Connect To Trello</a>
-    </div>
-
-    <div id="loggedin">
-        <div id="header">
-            Logged in to as <span id="fullName"></span> 
-            <a href="#" onclick="Trello.deauthorize(); updateLoggedIn();">Log Out</a>
-        </div>
-        <div id="output"></div>
-    </div>
+    
 </body>
 </html>
