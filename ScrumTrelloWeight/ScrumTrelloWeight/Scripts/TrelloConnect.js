@@ -36,9 +36,16 @@
                                             $.each(cards, function(ix, card) {
                                                 $("<div>").addClass("card").text(card.name).appendTo($cards)
                                                 .click(function () {
-                                                    alert("a");
-                                                    angular.element($('#CardController')).scope().roomName = card.id;
-                                                    angular.element($('#CardController')).scope().joinRoom();
+                                                    
+                                                    if (angular.element($('#CardController')).scope().inRoom) {
+                                                        angular.element($('#CardController')).scope().leaveRoom(card.id);
+                                                    } else {
+                                                        angular.element($('#CardController')).scope().roomName = card.id;
+                                                        angular.element($('#CardController')).scope().$apply();
+                                                        angular.element($('#CardController')).scope().joinRoom();
+                                                    }
+                                                    
+                                                    
                                                    
                                                 });
                                             });
@@ -52,6 +59,9 @@
     });
 };
 
+var updateTrelloCard = function(cardId, cardValue) {
+    Trello.post("cards/" + cardId + "/actions/comments", { text: "Weight "+cardValue });
+}
 
 var updateLoggedIn = function () {
     var isLoggedIn = Trello.authorized();

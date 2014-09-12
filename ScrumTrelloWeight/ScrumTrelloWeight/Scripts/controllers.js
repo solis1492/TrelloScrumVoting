@@ -135,6 +135,11 @@ angular.module('scrumApp').controller('ScrumCardsCtrl',function ($scope, cardHub
         $scope.inRoom = true;
     }
 
+    $scope.leaveRoom = function (newCardRoom) {
+        cardHub.server.leaveRoom(newCardRoom, $scope.roomName);
+        $scope.inRoom = false;
+    }
+
     $scope.setWeight = function(weight){
         $scope.selectedWeight = weight;
         cardHub.server.vote($scope.roomName, weight);
@@ -157,9 +162,17 @@ angular.module('scrumApp').controller('ScrumCardsCtrl',function ($scope, cardHub
         cardHub.server.show($scope.roomName);
     };
 
+    cardHub.client.changeRoom = function (newRoomName) {
+        $scope.roomName = newRoomName;
+        cardHub.server.joinRoom($scope.roomName);
+        $scope.inRoom = true;
+        $scope.$apply();
+    };
+
     cardHub.client.identifyMe = function(isAdmin) {
         $scope.imAdmin = isAdmin;
         $scope.isTrelloAdmin = isAdmin;
+        $scope.$apply();
     };
 
     cardHub.client.getCardFilter = function(query) {

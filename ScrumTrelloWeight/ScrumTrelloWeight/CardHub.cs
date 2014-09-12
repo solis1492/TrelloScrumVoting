@@ -18,22 +18,7 @@ namespace ScrumTrelloWeight
 
         public void JoinRoom(string roomName)
         {
-            if (_usersGroups.ContainsKey(Context.ConnectionId))
-            {
-                if (_usersGroups[Context.ConnectionId] != null)
-                {
-                    if (_groupClientsWeights[_usersGroups[Context.ConnectionId]].First(x => x.Connection.CompareTo(Context.ConnectionId) == 0).IsModerator)
-                    {
-                        foreach (var groupClientsWeight in _groupClientsWeights[_usersGroups[Context.ConnectionId]])
-                        {
-                            Groups.Remove(groupClientsWeight.Connection, _usersGroups[Context.ConnectionId]);
-                        }
-
-                        //Clients.Group(roomName, Context.ConnectionId).getCardFilter(_groupQuery[roomName]);
-                    }
-                }
-            }
-
+            
             Groups.Add(Context.ConnectionId, roomName);
             if (_groupClientsWeights.ContainsKey(roomName))
             {
@@ -74,6 +59,28 @@ namespace ScrumTrelloWeight
                 _groupQuery[roomName] = query;
                 Clients.Group(roomName, Context.ConnectionId).getCardFilter(_groupQuery[roomName]);
             }
+        }
+
+        public void LeaveRoom(string newRoomName, string lastRoomName)
+        {
+            if (newRoomName.Equals(lastRoomName))
+                return;
+            if (_groupClientsWeights.ContainsKey(lastRoomName))
+            {
+                var user = _groupClientsWeights[lastRoomName].First(x => x.Connection.CompareTo(Context.ConnectionId) == 0);
+                if (user.IsModerator)
+                {
+                    Clients.Group(lastRoomName).changeRoom(newRoomName);
+                }
+                List<User> temp;
+                _groupClientsWeights.TryRemove(lastRoomName, out temp);
+            }
+            
+            Groups.Remove(Context.ConnectionId, lastRoomName);
+            
+            
+            
+            _usersGroups.TryRemove(Context.ConnectionId, out lastRoomName);
         }
 
         public override Task OnDisconnected(bool stopCalled)
