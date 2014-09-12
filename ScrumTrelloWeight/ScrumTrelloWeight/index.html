@@ -8,59 +8,114 @@
     <script src="signalr/hubs"></script>
     <script src="Scripts/angular.js"></script>
     
+		<link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,300" />
+		<link rel="stylesheet" href="assets/css/ace.min.css" id="main-ace-style" />
+		<link rel="stylesheet" href="assets/css/ace-skins.min.css" />
+		<link rel="stylesheet" href="assets/css/ace-rtl.min.css" />
+		<script src="assets/js/ace-extra.min.js"></script>
+
     <script src="Scripts/app.js"></script>
-    
+    <link rel="stylesheet" type="text/css" href="Assets/css/">
     <script src="https://api.trello.com/1/client.js?key=0bfd84a20f3dd1f72a79f0b68ade91d4&dummy=.js"></script>
     
     <script src="Scripts/controllers.js"></script>
     <script src="Scripts/TrelloConnect.js"></script>
 </head>
-<body id="CardController" ng-controller="ScrumCardsCtrl">
+<body id="CardController" ng-controller="ScrumCardsCtrl" class="no-skin">
+    <div id="navbar" class="navbar navbar-default">
+			<script type="text/javascript">
+			    try { ace.settings.check('navbar', 'fixed') } catch (e) { }
+			</script>
 
+			<div class="navbar-container" id="navbar-container">
+				<button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler">
+					<span class="sr-only">Toggle sidebar</span>
+
+					<span class="icon-bar"></span>
+
+					<span class="icon-bar"></span>
+
+					<span class="icon-bar"></span>
+				</button>
+
+				<div class="navbar-header pull-left">
+					<a href="#" class="navbar-brand">
+						<small>
+							<i class="fa fa-leaf"></i>
+							Ju-jat-su?
+						</small>
+					</a>
+				</div>
+
+				<div class="navbar-buttons navbar-header pull-right" role="navigation">
+					<ul class="nav ace-nav">
+						
+
+						<li class="light-blue">
+							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+								
+								<span class="user-info">
+									<small>Welcome,</small>
+									<span id="fullName"></span>
+								</span>
+
+								
+							</a>
+
+							
+						</li>
+					</ul>
+				</div>
+			</div><!-- /.navbar-container -->
+		</div>
     <div ng-show="isTrelloAdmin">
         <div id="loggedout">
             <a href="#" onclick="Trello.authorize({type: 'popup', expiration: 'never', success: onAuthorize, scope: { write: true, read: true }})">Connect To Trello</a>
         </div>
         <div id="loggedin">
-            <div id="header">
-                Logged in to as <span id="fullName"></span>
+            <div id="header" class="item-list ui-sortable-placeholder">
                 <a href="#" onclick="Trello.deauthorize(); updateLoggedIn();">Log Out</a>
             </div>
             <div id="output"></div>
         </div>
     </div>
-
-    <div ng-hide="inRoom">
-        <input ng-hide="inRoom" ng-model="roomName" type="text" placeholder="room" autofocus />
-        <button ng-hide="inRoom" ng-click="joinRoom()">Join Room</button>
-    </div>
-    <div ng-show="inRoom">
-        <p> Room ID = {{roomName}}</p>
-
-        <div ng-if="imAdmin">
-            Select your card pack
-            <select ng-model="query">
-                <option ng-repeat="card in cards" value="{{card.name}}" ng-click="setCardPack(card.name)">{{card.name}} pack</option>
-            </select>
+    <div class="page-content">
+        <div class="row">
+            <div ng-hide="inRoom">
+            <input ng-hide="inRoom" ng-model="roomName" type="text" placeholder="room" autofocus />
+            <button ng-hide="inRoom" ng-click="joinRoom()">Join Room</button>
         </div>
-        Choose your estimate :
+            <div ng-show="inRoom">
+                <p> Room ID = {{roomName}}</p>
 
-        <div ng-repeat="card in cards | filter:query">
-            <button type="button" ng-repeat="value in card.values" ng-click="setWeight(value.weight)">
-                {{value.weight}}
-            </button>
-        </div>
-        <div>
-            Others:
-            <button type="button" ng-repeat="okis in weightsVoted track by $index">
-                {{okis}}
-            </button>
+                <div ng-if="imAdmin">
+                    Select your card pack
+                    <select ng-model="query">
+                        <option ng-repeat="card in cards" value="{{card.name}}" ng-click="setCardPack(card.name)">{{card.name}} pack</option>
+                    </select>
+                </div>
+                Choose your estimate :
 
-            <button type="button" ng-repeat="holder in placeHolders() track by $index"></button>
-        </div>
-        <div ng-if="imAdmin">
-            <button ng-click="reset()">Reset</button>
-            <button ng-click="show()">Show</button>
+                <div ng-repeat="card in cards | filter:query">
+                    <button type="button" ng-repeat="value in card.values" ng-click="setWeight(value.weight)">
+                        {{value.weight}}
+                    </button>
+                </div>
+                <div>
+                    Others:
+                    <button type="button" ng-repeat="okis in weightsVoted track by $index">
+                        {{okis}}
+                    </button>
+
+                    <button type="button" ng-repeat="holder in placeHolders() track by $index"></button>
+                </div>
+                <div ng-if="imAdmin">
+                    <button ng-click="reset()">Reset</button>
+                    <button ng-click="show()">Show</button>
+                </div>
+            </div>
         </div>
     </div>
 </body>
